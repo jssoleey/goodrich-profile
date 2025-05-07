@@ -7,7 +7,7 @@ import uuid
 
 st.set_page_config(
     page_title="온라인 전자 명함 생성 - goodrich",
-    page_icon=URLS["page_icon"],
+    page_icon="https://github.com/jssoleey/goodrich-chatbot-prevent/blob/main/image/logo.png?raw=true",
     layout="centered"
 )
 
