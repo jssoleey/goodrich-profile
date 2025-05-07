@@ -28,12 +28,16 @@ if session_id:
 
 def format_phone(number: str, type_: str) -> str:
     number = re.sub(r"\D", "", number)
-    if type_ == "mobile" or len(number) == 11:
+    length = len(number)
+
+    if type_ == "mobile" or length == 11:
+        # 11자리 → 3.4.4
         return f"{number[:3]}.{number[3:7]}.{number[7:]}"
-    elif type_ == "fax":
+    elif length == 10:
+        # 10자리 → 2.4.4
         return f"{number[:2]}.{number[2:6]}.{number[6:]}"
     else:
-        return f"{number[:3]}.{number[3:7]}.{number[7:]}" if len(number) == 10 else number
+        return number  # 형식 정의 외의 경우 원본 반환
 
 def get_base64_img(image_path):
     with open(image_path, "rb") as img_file:
@@ -187,21 +191,21 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <div style="display: flex; align-items: center;">
                 <span style="font-size: 13px; margin-right: 8px;">☎</span>
-                <span style="font-size: 13px; color: #888;">phone</span>
+                <span style="font-size: 13px; color: #888;">Mobile</span>
             </div>
             <span style="font-size: 13px; color: #000;">{mobile}</span>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <div style="display: flex; align-items: center;">
                 <span style="font-size: 13px; margin-right: 8px;">✉</span>
-                <span style="font-size: 13px; color: #888;">e-mail</span>
+                <span style="font-size: 13px; color: #888;">E-mail</span>
             </div>
             <span style="font-size: 13px; color: #000;">{email}</span>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center;">
             <div style="display: flex; align-items: center;">
                 <span style="font-size: 13px; margin-right: 8px;">🖷</span>
-                <span style="font-size: 13px; color: #888;">fax</span>
+                <span style="font-size: 13px; color: #888;">Fax</span>
             </div>
             <span style="font-size: 13px; color: #000;">{fax}</span>
             </div>
