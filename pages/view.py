@@ -23,7 +23,7 @@ user_folder = None
 if session_id:
     for folder in os.listdir("data"):
         if session_id in folder:
-            user_folder = os.path.join("data", folder)
+            user_folder = os.path.join("/data", folder)
             break
 
 def format_phone(number: str, type_: str) -> str:
