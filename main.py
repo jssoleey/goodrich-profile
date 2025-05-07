@@ -196,6 +196,7 @@ elif st.session_state.page == "input":
         with col2:
             desc = st.text_input(f"이력 설명", placeholder="예: 굿리치플러스 입사", value=item["desc"], key=f"desc_{i}")
         with col3:
+            st.markdown("<div style='margin-top: 28px;'>", unsafe_allow_html=True)
             if st.button("🗑 삭제", key=f"delete_{i}", use_container_width=True):
                 to_delete = i
                 
@@ -252,7 +253,7 @@ elif st.session_state.page == "input":
 
         # 이미지 미리보기
         selected_bg = bg_files[st.session_state.bg_index]
-        st.image(os.path.join(bg_dir, selected_bg), width = 440)
+        st.image(os.path.join(bg_dir, selected_bg), width = 430)
 
         # 버튼을 누르면 상태에만 기록
         col1, col2 = st.columns([1, 1])
