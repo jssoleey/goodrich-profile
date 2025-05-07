@@ -6,7 +6,6 @@ st.set_page_config(
     layout="centered"
 )
 
-import view
 import streamlit.components.v1 as components
 import os
 import json
@@ -48,9 +47,12 @@ st.markdown("""
 if "page" not in st.session_state:
     st.session_state.page = "login"
 
+from view import render_view  # ✅ 함수로만 가져옴
+
 query_params = st.experimental_get_query_params()
-if query_params.get("page") == "view":
-    import view  # 또는 render_view(session_id)
+if query_params.get("page", [None])[0] == "view":
+    render_view()
+    st.stop()  # ⛔ 나머지 코드 실행 방지
 else :
     # ----------------- 로그인 화면 -------------------
     if st.session_state.page == "login":
