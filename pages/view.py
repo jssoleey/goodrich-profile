@@ -253,7 +253,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
     histories = profile.get("histories", [])
     
     num_items = len(histories)
-    dynamic_timeline_height = 192 + (num_items - 1) * 84
+    dynamic_timeline_height = 192 + (num_items - 1) * 82
     
     if histories:
         timeline_items = ""
@@ -320,7 +320,6 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
             </div>
         </div>
         """, height=dynamic_timeline_height+20)
-
         
         # 지도
         map_embed_code = """
