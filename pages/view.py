@@ -74,8 +74,8 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                 justify-content: center;
             }}
             .wrapper {{
-                width: 700px;
-                height: 500px;
+                width: 400px;
+                height: 250px;
                 background-image: url('data:image/png;base64,{bg_base64}');
                 background-size: cover;
                 background-position: center;
@@ -84,9 +84,9 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                 justify-content: center;
             }}
             .card {{
-                width: 600px;
-                height: 300px;
-                padding: 25px 35px;
+                width: 300px;
+                height: 150px;
+                padding: 10px 15px;
                 box-sizing: border-box;
                 background-color: #ffffff;
                 border: 1px solid #ddd;
@@ -94,11 +94,11 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                 font-family: sans-serif;
             }}
             .card h2 {{
-                font-size: 28px;
-                margin: 7px 0 5px 0;
+                font-size: 13px;
+                margin: 2px 0 0 0;
             }}
             .card h5 {{
-                font-size: 18px;
+                font-size: 8px;
                 margin: 0;
                 color: gray;
             }}
@@ -114,18 +114,18 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                                 <h5>{department} | {position}</h5>
                             </div>
                             <div>
-                                <img src="https://github.com/jssoleey/goodrich-profile/blob/main/image/goodrich.png?raw=true" width="120" />
+                                <img src="https://github.com/jssoleey/goodrich-profile/blob/main/image/goodrich.png?raw=true" width="50" />
                             </div>
                         </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; font-size: 16px;">
-                            <div style="text-align: left; line-height: 0.8;">
+                        <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; font-size: 8px;">
+                            <div style="text-align: left; line-height: 0.5;">
                                 <p><strong>Mobile.</strong> {mobile}</p>
                                 <p><strong>Tel.</strong> {phone}</p>
                                 <p><strong>Fax.</strong> {fax}</p>
                                 <p><strong>Email.</strong> {email}</p>
                                 <p><a href="http://www.goodrich.kr" style="color: #d4922b; text-decoration: none;">www.goodrich.kr</a></p>
                             </div>
-                            <div style="text-align: left; font-size: 16px; color: #555;">
+                            <div style="text-align: left; font-size: 8px; color: #555;">
                                 <p>서울시 중구 퇴계로36가길 10, 402호</p>
                             </div>
                         </div>
@@ -136,7 +136,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
         </html>
         """
         # 명함(배경 포함)은 고정 영역
-        components.html(html, height=550)
+        components.html(html, height=300)
         
         # 사용자 이름, 직급 정보 불러오기
         name = profile.get("name", "")
@@ -146,17 +146,17 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
         spaced_name = " ".join(name)
 
         st.components.v1.html(f"""
-            <div style="display: flex; justify-content: center; margin-top: 50px;">
-                <div style="width: 700px; font-family: sans-serif; text-align: center;">
-                    <p style="font-size: 30px; margin-bottom: 5px;">안녕하세요.</p>
+            <div style="display: flex; justify-content: center; margin-top: 0;">
+                <div style="width: 350px; font-family: sans-serif; text-align: center;">
+                    <p style="font-size: 20px; margin-bottom: 5px;">안녕하세요.</p>
                     <p style="margin: 0;">
-                        <span style="font-size: 36px; font-weight: bold;">{spaced_name} </span> 
-                        <span style="font-size: 30px; font-weight: bold;">{position}</span> 
-                        <span style="font-size: 30px;">입니다</span>
+                        <span style="font-size: 24px; font-weight: bold;">{spaced_name} </span> 
+                        <span style="font-size: 20px; font-weight: bold;">{position}</span> 
+                        <span style="font-size: 20px;">입니다</span>
                     </p>
                 </div>
             </div>
-        """, height=200)
+        """, height=120)
 
         
         # 프로필 이미지 표시 (있을 경우)
@@ -164,9 +164,9 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
         if os.path.exists(img_path):
             img_base64 = get_base64_img(img_path)
             components.html(f"""
-                <div style="display: flex; justify-content: center; margin-top: 70px;">
+                <div style="display: flex; justify-content: center; margin-top: 0;">
                     <div style="
-                        width: 300px; height: 300px;
+                        width: 150px; height: 150px;
                         border-radius: 50%;
                         overflow: hidden;
                         border: 2px solid #ddd;
@@ -175,40 +175,39 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                         <img src="data:image/png;base64,{img_base64}" style="width: 100%; height: 100%; object-fit: cover;" />
                     </div>
                 </div>
-            """, height=460)
+            """, height=200)
             
         mobile = profile.get("mobile", "")
         email = profile.get("email", "")
         fax = profile.get("fax", "")
 
         st.components.v1.html(f"""
-        <div style="display: flex; justify-content: center; margin-top: 47px;">
-        <div style="width: 500px; font-family: sans-serif;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: center; margin-top: 0;">
+        <div style="width: 240px; font-family: sans-serif;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <div style="display: flex; align-items: center;">
-                <span style="font-size: 28px; margin-right: 8px;">☎</span>
-                <span style="font-size: 28px; color: #888;">phone</span>
+                <span style="font-size: 13px; margin-right: 8px;">☎</span>
+                <span style="font-size: 13px; color: #888;">phone</span>
             </div>
-            <span style="font-size: 28px; color: #000;">{mobile}</span>
+            <span style="font-size: 13px; color: #000;">{mobile}</span>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <div style="display: flex; align-items: center;">
-                <span style="font-size: 28px; margin-right: 8px;">✉</span>
-                <span style="font-size: 28px; color: #888;">e-mail</span>
+                <span style="font-size: 13px; margin-right: 8px;">✉</span>
+                <span style="font-size: 13px; color: #888;">e-mail</span>
             </div>
-            <span style="font-size: 28px; color: #000;">{email}</span>
+            <span style="font-size: 13px; color: #000;">{email}</span>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center;">
             <div style="display: flex; align-items: center;">
-                <span style="font-size: 28px; margin-right: 8px;">🖷</span>
-                <span style="font-size: 28px; color: #888;">fax</span>
+                <span style="font-size: 13px; margin-right: 8px;">🖷</span>
+                <span style="font-size: 13px; color: #888;">fax</span>
             </div>
-            <span style="font-size: 28px; color: #000;">{fax}</span>
+            <span style="font-size: 13px; color: #000;">{fax}</span>
             </div>
         </div>
         </div>
-        """, height=220)
-
+        """, height=150)
 
         # 소개글 줄 수 계산 함수 (엔터 + 길이 기준 자동 줄바꿈 포함)
         def estimate_line_count(text, chars_per_line=45):
@@ -220,28 +219,28 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
             return count
 
         line_count = estimate_line_count(introduction, chars_per_line=45)
-        line_height_px = 80  # ← 폰트 크기에 맞춰 조정
-        base_height = 250
+        line_height_px = 40  # ← 폰트 크기에 맞춰 조정
+        base_height = 120
         dynamic_height = base_height + (line_count * line_height_px)
 
         components.html(
             f"""
-            <div style="display: flex; justify-content: center; margin-top: 100px;">
-                <div style="width: 700px; padding: 30px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif;">
+            <div style="display: flex; justify-content: center; margin-top: 0;">
+                <div style="width: 350px; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif;">
                     <link rel="preconnect" href="https://fonts.googleapis.com">
                     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                     <link href="https://fonts.googleapis.com/css2?family=Galada&display=swap" rel="stylesheet">
                     <div style="
                         font-family: 'Galada', cursive;
-                        font-size: 40px;
+                        font-size: 20px;
                         text-align: center;
                         color: #f79901;
-                        margin-top: 20px;
-                        margin-bottom: 50px;
+                        margin-top: 10px;
+                        margin-bottom: 25px;
                     ">
                         INTRODUCTION
                     </div>
-                    <p style="font-size: 30px; color: #333; text-align: center; line-height: 1.6; white-space: pre-wrap;">{introduction}</p>
+                    <p style="font-size: 15px; color: #333; text-align: center; line-height: 1.6; white-space: pre-wrap;">{introduction}</p>
                 </div>
             </div>
             """,
@@ -265,30 +264,30 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
             """
 
         components.html(f"""
-        <div style="display: flex; justify-content: center; margin-top: 100px;">
-            <div style="width: 700px; padding: 30px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif;">
+        <div style="display: flex; justify-content: center; margin-top: 0;">
+            <div style="width: 350px; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif;">
                 <link rel="preconnect" href="https://fonts.googleapis.com">
                     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                     <link href="https://fonts.googleapis.com/css2?family=Galada&display=swap" rel="stylesheet">
                     <div style="
                         font-family: 'Galada', cursive;
-                        font-size: 40px;
+                        font-size: 20px;
                         text-align: center;
                         color: #f79901;
-                        margin-top: 20px;
-                        margin-bottom: 50px;
+                        margin-top: 10px;
+                        margin-bottom: 25px;
                     ">
                         CARRIER
                     </div>
-                <div style="position: relative; padding-left: 28px; border-left: 4px solid #f79901;">
+                <div style="position: relative; padding-left: 14px; border-left: 4px solid #f79901; margin-left: 15px;">
                     <style>
                         .item {{
                             position: relative;
                             margin-bottom: 40px;
                         }}
                         .dot {{
-                            width: 14px;
-                            height: 14px;
+                            width: 7px;
+                            height: 7px;
                             background: #f79901;
                             border-radius: 50%;
                             position: absolute;
@@ -296,16 +295,16 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                             top: 6px;
                         }}
                         .content {{
-                            margin-left: 50px;
+                            margin-left: 25px;
                         }}
                         .year {{
                             font-weight: bold;
-                            font-size: 30px;
+                            font-size: 13px;
                             color: #666;
-                            margin-bottom: 6px;
+                            margin-bottom: 4px;
                         }}
                         .desc {{
-                            font-size: 30px;
+                            font-size: 13px;
                             color: #222;
                             line-height: 1.5;
                         }}
@@ -314,36 +313,38 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                 </div>
             </div>
         </div>
-        """, height=360 + len(histories) * 120)
+        """, height=235 + len(histories) * 60)
 
         map_embed_code = """
-        <div style="display: flex; justify-content: center; margin-top: 100px;">
-            <div style="width: 700px; padding: 30px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif;">
+        <div style="display: flex; justify-content: center; margin-top: 0;">
+            <div style="width: 350px; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif;">        
                     <link rel="preconnect" href="https://fonts.googleapis.com">
                     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                     <link href="https://fonts.googleapis.com/css2?family=Galada&display=swap" rel="stylesheet">
                     <div style="
                         font-family: 'Galada', cursive;
-                        font-size: 40px;
+                        font-size: 20px;
                         text-align: center;
                         color: #f79901;
-                        margin-top: 20px;
-                        margin-bottom: 50px;
+                        margin-top: 10px;
+                        margin-bottom: 25px;
                     ">
                         LOCATION
                     </div>
-                <iframe 
-                    width="700" 
-                    height="400" 
-                    frameborder="0" 
-                    style="border:0" 
-                    src="https://www.google.com/maps?q=서울시 중구 퇴계로36가길 10 402호&output=embed" 
-                    allowfullscreen>
-                </iframe>
+                <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                    <iframe 
+                        width="280" 
+                        height="280" 
+                        frameborder="0" 
+                        style="border:0" 
+                        src="https://www.google.com/maps?q=서울시 중구 퇴계로36가길 10 402호&output=embed" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
         </div>
         """
 
-        st.components.v1.html(map_embed_code, height=800)
+        st.components.v1.html(map_embed_code, height=500)
 
     else:
         st.error("⚠️ 배경 이미지가 존재하지 않습니다.")
