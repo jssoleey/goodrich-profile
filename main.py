@@ -226,7 +226,7 @@ elif st.session_state.page == "input":
 
     # 미리보기 버튼
     if st.button("명함 미리보기"):
-        base_url = "http://localhost:8501/view"
+        base_url = "https://goodrich-profile.onrender.com/view"
         session_id = st.session_state['session_id']
         view_url = f"{base_url}?session_id={session_id}"
 
