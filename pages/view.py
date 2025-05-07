@@ -283,7 +283,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                         margin-top: 10px;
                         margin-bottom: 25px;
                     ">
-                        CARRIER
+                        CAREER
                     </div>
                 <div style="position: relative; padding-left: 14px; border-left: 4px solid #f79901; margin-left: 15px;">
                     <style>
