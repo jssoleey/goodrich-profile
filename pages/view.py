@@ -207,26 +207,27 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
             </div>
         </div>
         </div>
-        """, height=150)
+        """, height=130)
 
-        # 소개글 줄 수 계산 함수 (엔터 + 길이 기준 자동 줄바꿈 포함)
-        def estimate_line_count(text, chars_per_line=45):
-            lines = text.split("\n")
-            count = 0
-            for line in lines:
+        # 소개글 자동 줄바꿈 + 줄 수 계산 함수
+        def get_wrapped_text_and_line_count(text: str, chars_per_line: int = 20):
+            wrapped_lines = []
+            for line in text.split("\n"):
                 wrapped = textwrap.wrap(line, width=chars_per_line)
-                count += max(1, len(wrapped))
-            return count
+                wrapped_lines.extend(wrapped if wrapped else [""])  # 빈 줄 유지
+            return "\n".join(wrapped_lines), len(wrapped_lines)
 
-        line_count = estimate_line_count(introduction, chars_per_line=45)
-        line_height_px = 40  # ← 폰트 크기에 맞춰 조정
-        base_height = 120
-        dynamic_height = base_height + (line_count * line_height_px)
+        # 자동 줄바꿈 적용
+        wrapped_intro, line_count = get_wrapped_text_and_line_count(introduction, chars_per_line=20)
 
+        # 동적 높이 계산 (기본 149 + 줄 수 당 +23)
+        dynamic_height = 149 + (line_count - 1) * 24
+
+        # 컴포넌트 출력
         components.html(
             f"""
             <div style="display: flex; justify-content: center; margin-top: 0;">
-                <div style="width: 350px; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif;">
+                <div style="width: 350px; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif; overflow: auto;">
                     <link rel="preconnect" href="https://fonts.googleapis.com">
                     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                     <link href="https://fonts.googleapis.com/css2?family=Galada&display=swap" rel="stylesheet">
@@ -240,14 +241,19 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                     ">
                         INTRODUCTION
                     </div>
-                    <p style="font-size: 15px; color: #333; text-align: center; line-height: 1.6; white-space: pre-wrap;">{introduction}</p>
+                    <p style="font-size: 15px; color: #333; text-align: center; line-height: 1.6; white-space: pre-wrap;">{wrapped_intro}</p>
                 </div>
             </div>
             """,
-            height=dynamic_height
+            height=dynamic_height + 20
         )
-        
+    
+    
+    # 이력    
     histories = profile.get("histories", [])
+    
+    num_items = len(histories)
+    dynamic_timeline_height = 192 + (num_items - 1) * 84
     
     if histories:
         timeline_items = ""
@@ -313,8 +319,10 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                 </div>
             </div>
         </div>
-        """, height=235 + len(histories) * 60)
+        """, height=dynamic_timeline_height+20)
 
+        
+        # 지도
         map_embed_code = """
         <div style="display: flex; justify-content: center; margin-top: 0;">
             <div style="width: 350px; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif;">        
