@@ -156,7 +156,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                     <p style="margin: 0;">
                         <span style="font-size: 24px; font-weight: bold;">{spaced_name} </span> 
                         <span style="font-size: 20px; font-weight: bold;">{position}</span> 
-                        <span style="font-size: 20px;">입니다</span>
+                        <span style="font-size: 20px;">입니다.</span>
                     </p>
                 </div>
             </div>
