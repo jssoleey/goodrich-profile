@@ -6,8 +6,6 @@ import json
 import base64
 import textwrap
 
-st.set_page_config(page_title="전자명함 보기", layout="wide")
-
 st.markdown("""
     <style>
     /* 사이드바 숨기기 */
