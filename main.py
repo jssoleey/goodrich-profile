@@ -1,15 +1,16 @@
 import streamlit as st
-import view
-import streamlit.components.v1 as components
-import os
-import json
-import uuid
 
 st.set_page_config(
     page_title="온라인 전자 명함 생성 - goodrich",
     page_icon="https://github.com/jssoleey/goodrich-chatbot-prevent/blob/main/image/logo.png?raw=true",
     layout="centered"
 )
+
+import view
+import streamlit.components.v1 as components
+import os
+import json
+import uuid
 
 # ----------------- 설정 -------------------
 URLS = {
