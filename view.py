@@ -23,6 +23,23 @@ if session_id:
         if session_id in folder:
             user_folder = os.path.join("data", folder)
             break
+            
+def render_view():
+    query_params = st.experimental_get_query_params()
+    session_id = query_params.get("session_id", [None])[0]
+
+    if not session_id:
+        st.error("session_id가 없습니다.")
+        return
+
+    profile_path = os.path.join("data", session_id, "profile.json")
+    if not os.path.exists(profile_path):
+        st.error("해당 명함 정보를 찾을 수 없습니다.")
+        return
+
+    with open(profile_path, encoding="utf-8") as f:
+        profile = json.load(f)
+
 
 def format_phone(number: str, type_: str) -> str:
     number = re.sub(r"\D", "", number)
