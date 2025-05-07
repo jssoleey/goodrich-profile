@@ -181,9 +181,9 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                 </div>
             """, height=200)
             
-        mobile = profile.get("mobile", "")
+        mobile = format_phone(profile.get("mobile", ""), "mobile")
         email = profile.get("email", "")
-        fax = profile.get("fax", "")
+        fax = format_phone(profile.get("fax", ""), "fax")
 
         st.components.v1.html(f"""
         <div style="display: flex; justify-content: center; margin-top: 0;">
