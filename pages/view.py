@@ -344,12 +344,13 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                     </div>
                 <div style="display: flex; justify-content: center; margin-bottom: 20px;">
                     <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3162.7931805361027!2d126.99256707537455!3d37.55993622450737!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca2fd321494bd%3A0xf5909385d0ea334a!2z7ISc7Jq47Yq567OE7IucIOykkeq1rCDth7Tqs4TroZwzNuqwgOq4uCAxMCA0MDLtmLg!5e0!3m2!1sko!2skr!4v1746646834956!5m2!1sko!2skr" 
                         width="280" 
                         height="280" 
-                        frameborder="0" 
-                        style="border:0" 
-                        src="https://www.google.com/maps?q=서울시 중구 퇴계로36가길 10 402호&output=embed" 
-                        allowfullscreen>
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
                 </div>
         </div>
