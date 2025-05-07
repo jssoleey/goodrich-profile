@@ -16,7 +16,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-query_params = st.query_params
+query_params = st.experimental_get_query_params()
 session_id = query_params.get("session_id", [None])[0]
 
 user_folder = None
