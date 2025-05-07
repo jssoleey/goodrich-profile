@@ -106,7 +106,7 @@ if st.session_state.page == "login":
         if st.button("로그인", use_container_width=True):
             if name and emp_id:
                 id_key = f"{name}_{emp_id}"
-                index_path = os.path.join("data", "index.json")
+                index_path = os.path.join("/data", "index.json")
                 os.makedirs("data", exist_ok=True)
 
                 if os.path.exists(index_path):
@@ -122,7 +122,7 @@ if st.session_state.page == "login":
                         json.dump(index, f, ensure_ascii=False, indent=2)
 
                 session_id = index[id_key]
-                user_folder = os.path.join("data", session_id)
+                user_folder = os.path.join("/data", session_id)
                 os.makedirs(user_folder, exist_ok=True)
 
                 st.session_state.update({
@@ -294,7 +294,7 @@ elif st.session_state.page == "input":
 
     with col2:
         if st.button("▶️ 모바일 명함 생성하기", use_container_width=True):
-            base_url = "http://localhost:8501/view"
+            base_url = "https://goodrich-profile.onrender.com/view"
             session_id = st.session_state['session_id']
             view_url = f"{base_url}?session_id={session_id}"
 
