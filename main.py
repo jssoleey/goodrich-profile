@@ -47,7 +47,7 @@ st.markdown("""
 if "page" not in st.session_state:
     st.session_state.page = "login"
 
-query_params = st.query_params
+query_params = st.experimental_get_query_params()
 if query_params.get("page") == "view":
     import view  # 또는 render_view(session_id)
 else :
