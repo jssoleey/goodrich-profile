@@ -6,6 +6,8 @@ import json
 import base64
 import textwrap
 
+st.set_page_config(page_title="전자명함 보기", layout="wide")
+
 st.markdown("""
     <style>
     /* 사이드바 숨기기 */
@@ -14,7 +16,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-query_params = st.experimental_get_query_params()
+query_params = st.query_params
 session_id = query_params.get("session_id", [None])[0]
 
 user_folder = None
@@ -23,23 +25,6 @@ if session_id:
         if session_id in folder:
             user_folder = os.path.join("data", folder)
             break
-            
-def render_view():
-    query_params = st.experimental_get_query_params()
-    session_id = query_params.get("session_id", [None])[0]
-
-    if not session_id:
-        st.error("session_id가 없습니다.")
-        return
-
-    profile_path = os.path.join("data", session_id, "profile.json")
-    if not os.path.exists(profile_path):
-        st.error("해당 명함 정보를 찾을 수 없습니다.")
-        return
-
-    with open(profile_path, encoding="utf-8") as f:
-        profile = json.load(f)
-
 
 def format_phone(number: str, type_: str) -> str:
     number = re.sub(r"\D", "", number)
