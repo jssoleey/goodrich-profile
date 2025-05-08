@@ -121,13 +121,7 @@ if st.session_state.page == "login":
                     with open(index_path, "w", encoding="utf-8") as f:
                         json.dump(index, f, ensure_ascii=False, indent=2)
 
-                session_id = index[id_key]
-
-                # ✅ 디버깅 출력
-                st.write("🔐 로그인 성공")
-                st.write("🆔 id_key:", id_key)
-                st.write("📂 session_id:", session_id)
-                
+                session_id = index[id_key]            
                 user_folder = os.path.join("/data", session_id)
                 os.makedirs(user_folder, exist_ok=True)
 
