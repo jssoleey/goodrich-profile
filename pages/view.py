@@ -395,7 +395,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
             </script>
             """
 
-            components.html(gallery_html, height=353)
+            components.html(gallery_html, height=305)
         
         # -------------------- LOCATION --------------------
         map_embed_code = f"""
