@@ -269,7 +269,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
     histories = profile.get("histories", [])
     
     num_items = len(histories)
-    dynamic_timeline_height = 192 + (num_items - 1) * 80
+    dynamic_timeline_height = 192 + (num_items - 1) * 78
     
     if histories:
         timeline_items = ""
