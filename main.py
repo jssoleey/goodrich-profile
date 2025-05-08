@@ -122,6 +122,12 @@ if st.session_state.page == "login":
                         json.dump(index, f, ensure_ascii=False, indent=2)
 
                 session_id = index[id_key]
+
+                # ✅ 디버깅 출력
+                st.write("🔐 로그인 성공")
+                st.write("🆔 id_key:", id_key)
+                st.write("📂 session_id:", session_id)
+                
                 user_folder = os.path.join("/data", session_id)
                 os.makedirs(user_folder, exist_ok=True)
 
@@ -315,3 +321,13 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+st.markdown("---")
+st.markdown("### 📄 index.json 전체 내용 (디버깅용)")
+
+try:
+    with open("/data/index.json", encoding="utf-8") as f:
+        index = json.load(f)
+        st.json(index)
+except Exception as e:
+    st.error(f"❌ index.json 읽기 실패: {e}")
