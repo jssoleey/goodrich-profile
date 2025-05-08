@@ -321,13 +321,3 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
-st.markdown("---")
-st.markdown("### 📄 index.json 전체 내용 (디버깅용)")
-
-try:
-    with open("/data/index.json", encoding="utf-8") as f:
-        index = json.load(f)
-        st.json(index)
-except Exception as e:
-    st.error(f"❌ index.json 읽기 실패: {e}")
