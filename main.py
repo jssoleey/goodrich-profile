@@ -107,7 +107,7 @@ if st.session_state.page == "login":
             if name and emp_id:
                 id_key = f"{name}_{emp_id}"
                 index_path = os.path.join("/data", "index.json")
-                os.makedirs("data", exist_ok=True)
+                os.makedirs("/data", exist_ok=True)
 
                 if os.path.exists(index_path):
                     with open(index_path, encoding="utf-8") as f:
