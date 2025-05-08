@@ -1,8 +1,13 @@
 import streamlit as st
 import streamlit.components.v1 as components
+from streamlit_cropper import st_cropper
 import os
 import json
 import uuid
+from PIL import Image
+import base64
+from io import BytesIO
+import time
 
 # ----------------- 설정 -------------------
 URLS = {
@@ -132,11 +137,11 @@ if st.session_state.page == "login":
                     'session_id': session_id,
                     'page': 'input'
                 })
-                st.experimental_rerun()
+                st.rerun()
             else:
                 st.warning("이름과 비밀번호를 모두 입력해 주세요.")
 
-# ----------------- 입력 화면 -------------------
+#------------------------- 기본정보 입력 -------------------------
 elif st.session_state.page == "input":
     st.markdown(f"<h4>📇 {st.session_state['user_name']}님의 전자명함 등록</h4>", unsafe_allow_html=True)
 
@@ -155,6 +160,10 @@ elif st.session_state.page == "input":
         with open(profile_path, encoding="utf-8") as f:
             saved = json.load(f)
             default_data.update(saved)
+            
+    for key in default_data:
+        if key not in st.session_state and key != "histories":  # 이력은 별도 관리
+            st.session_state[key] = default_data[key]
 
     # --- 이력 세션 상태 초기화 ---
     if "histories" not in st.session_state:
@@ -174,16 +183,18 @@ elif st.session_state.page == "input":
     for key, label in fields.items():
         placeholder = f"예: {'홍길동' if key == 'name' else '플러스사업부' if key == 'department' else '팀장' if key == 'position' else '01012345678(숫자만 입력하세요)' if key == 'mobile' else '01012345678(숫자만 입력하세요)' if key == 'phone' else '0212345678(숫자만 입력하세요)' if key == 'fax' else 'example@company.com' if key == 'email' else ''}"
         if key == "introduction":
-            profile_data[key] = st.text_area(label, value=default_data.get(key, ""), height=120, placeholder="자유롭게 작성해 주세요.")
+            st.text_area(label, key=key, height=120, placeholder="자유롭게 작성해 주세요.")
         else:
-            profile_data[key] = st.text_input(label, value=default_data.get(key, ""), placeholder=placeholder)
+            st.text_input(label, key=key, placeholder=placeholder)
 
     # 세션 상태 초기화
     if "histories" not in st.session_state:
         st.session_state.histories = default_data.get("histories", []).copy()
-
+        
     st.markdown("")
     st.markdown("---")
+
+#------------------------- 개인 이력 -------------------------
     st.markdown("")
     st.markdown("##### 📍 개인 이력 입력")
 
@@ -207,7 +218,7 @@ elif st.session_state.page == "input":
     # 삭제 처리
     if to_delete is not None:
         del st.session_state.histories[to_delete]
-        st.experimental_rerun()
+        st.rerun()
 
     # ➕ 이력 추가
     col1, col2, col3 = st.columns([1.5, 4, 1])
@@ -215,89 +226,319 @@ elif st.session_state.page == "input":
     with col1 :
         if st.button("➕ 이력 추가", use_container_width=True):
             st.session_state.histories.append({"year": "", "desc": ""})
-            st.experimental_rerun() 
+            st.rerun()
 
     # --- 저장 시 이력 포함 ---
     profile_data["histories"] = st.session_state.histories
     
-    # 📸 프로필 사진 업로드
     st.markdown("")
     st.markdown("---")
+
+#------------------------- 프로필 사진 ------------------------- 
+    def cropped_img_to_base64(img):
+        buffered = BytesIO()
+        img.save(buffered, format="PNG")
+        return base64.b64encode(buffered.getvalue()).decode()
+   
+    # ✅ 세션 상태 초기화
+    if "uploaded_now" not in st.session_state:
+        st.session_state["uploaded_now"] = False
+    if "just_saved" not in st.session_state:
+        st.session_state["just_saved"] = False
+
+    # 경로 설정
+    profile_img_path = os.path.join(user_folder, "profile.jpg")
+
+    # ✅ 파일 업로드
     st.markdown("")
-    st.markdown("##### 📍 프로필 사진 업로드 (정사각형 권장)", unsafe_allow_html=True)
-    uploaded_img = st.file_uploader("프로필 사진 선택", type=["png", "jpg", "jpeg"])
+    st.markdown("##### 📍 프로필 사진 업로드", unsafe_allow_html=True)
 
-    if uploaded_img is not None:
-        img_save_path = os.path.join(user_folder, "profile.jpg")
-        with open(img_save_path, "wb") as f:
-            f.write(uploaded_img.read())
-        st.success("✅ 프로필 사진이 업로드되었습니다.")
+    col1, col2 = st.columns([3, 1])
 
+    with col1:
+        # ✅ 업로더에 dynamic key 사용 (이미 적용되었을 것)
+        uploader_key = "uploader"
+        if st.session_state.get("force_clear_uploader"):
+            uploader_key = str(uuid.uuid4())
+            st.session_state["force_clear_uploader"] = False
+
+        uploaded_img = st.file_uploader("이미지를 업로드하세요", type=["png", "jpg", "jpeg"], key=uploader_key)
+
+    with col2:
+        # ✅ 저장된 프로필 이미지가 있다면 표시
+        if os.path.exists(profile_img_path):
+            st.markdown(
+                f"""
+                <div style='
+                    display: flex;
+                    justify-content: center;
+                    margin-top: 8px;
+                    margin-right: 10px;
+                '>
+                    <img src="data:image/png;base64,{cropped_img_to_base64(Image.open(profile_img_path))}"
+                        style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%; border: 1px solid #ccc;" />
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+    
+    if uploaded_img:
+        st.session_state["uploaded_now"] = True
+
+    # ✅ 1. 이미지 업로드 → cropper 및 실시간 미리보기
+    if uploaded_img and not st.session_state["just_saved"]:
+        img = Image.open(uploaded_img)
+        img_copy = img.copy()
+        img_copy.thumbnail((300, 300))
+
+        # ✅ 두 개의 열로 나누기
+        col1, col2 = st.columns([3, 2])
+
+        with col1:
+            st.markdown("**🔍 자를 영역을 선택하세요 (1:1 비율)**")
+            cropped_img = st_cropper(
+                img_copy,
+                aspect_ratio=(1, 1),
+                box_color='#f79901',
+                return_type='image',
+                realtime_update=True
+            )
+
+        with col2:
+            st.markdown(
+                f"""
+                <div style='display: flex; justify-content: center; margin-top: 60px; margin-bottom: 30px'>
+                    <img src="data:image/png;base64,{cropped_img_to_base64(cropped_img)}"
+                        style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;" />
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+            if st.button("💾 이미지 저장", use_container_width=True):
+                cropped_img.save(profile_img_path)
+                st.session_state["uploaded_now"] = False
+                st.session_state["just_saved"] = True
+                st.session_state["force_clear_uploader"] = True
+                st.rerun()
+
+    # ✅ 2. 저장 직후: 메시지 + 저장된 이미지 즉시 보여주기
+    elif st.session_state["just_saved"]:
+        st.success("✅ 프로필 이미지가 저장되었습니다.")
+        st.session_state["just_saved"] = False  # 다음 렌더링부터는 다시 일반 흐름
+        
+    st.markdown("")
+    st.markdown("---")
+    
+# ------------------------- 갤러리 -------------------------
+    st.markdown("")
+    st.markdown("##### 📍 갤러리 이미지 업로드", unsafe_allow_html=True)
+
+    photos_dir = os.path.join(user_folder, "photos")
+    os.makedirs(photos_dir, exist_ok=True)
+
+    # ✅ 저장 후 재렌더링 제어
+    if "gallery_saved" not in st.session_state:
+        st.session_state.gallery_saved = False
+        
+    uploaded_photo = st.file_uploader(
+        "",
+        type=["jpg", "jpeg", "png"],
+        key=f"single_photo_{st.session_state.get('upload_key', 0)}"
+    )
+    
+    if uploaded_photo and st.session_state.get("gallery_saved"):
+        st.session_state.gallery_saved = False
+
+    # ✅ 자르기 UI는 저장 후에만 숨김
+    if uploaded_photo and not st.session_state.gallery_saved:
+        img = Image.open(uploaded_photo)
+        img_copy = img.copy()
+
+        cropped_img = st_cropper(
+            img_copy,
+            aspect_ratio=(3.5, 2),
+            box_color='#f79901',
+            return_type='image',
+            realtime_update=True
+        )
+        col1, col2, col3 = st.columns(3)
+        with col2 :
+            if st.button("💾 자른 이미지 저장", use_container_width = True):
+                filename = f"{int(time.time())}.jpg"
+                filepath = os.path.join(photos_dir, filename)
+                
+                if cropped_img.mode in ("RGBA", "P"):
+                    cropped_img = cropped_img.convert("RGB")
+                
+                cropped_img.save(filepath)
+                st.session_state.gallery_saved = True
+                st.session_state.upload_key = st.session_state.get("upload_key", 0) + 1
+                st.rerun()
+
+    # ✅ 저장된 이미지 미리보기 + 삭제
+    st.markdown("")
+    photo_files = sorted([
+        f for f in os.listdir(photos_dir)
+        if f.lower().endswith((".jpg", ".jpeg", ".png"))
+    ])
+
+    if photo_files:
+
+        cols = st.columns(5)
+        to_delete = None
+
+        for i, file in enumerate(photo_files):
+            path = os.path.join(photos_dir, file)
+            with cols[i % 5]:
+                st.markdown(
+                    f"""
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <img src="data:image/jpeg;base64,{base64.b64encode(open(path, "rb").read()).decode()}" width="100"/><br>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+                if st.button("🗑 삭제", use_container_width = True, key=f"del_{file}"):
+                    to_delete = file
+
+        if to_delete:
+            os.remove(os.path.join(photos_dir, to_delete))
+            st.rerun()
+
+    st.markdown("")
+    st.markdown("---")
+    
+#------------------------- 명함 배경 -------------------------        
     # 명함 배경 업로드
-    st.markdown("")
-    st.markdown("---")
     st.markdown("")
     st.markdown("##### 📍 명함 배경 이미지 선택", unsafe_allow_html=True)
     
-    # 이미지 파일 불러오기
+    # 현재 배경 이미지 목록 로딩
     bg_dir = "backgrounds"
-    os.makedirs(bg_dir, exist_ok=True)
     bg_files = sorted([f for f in os.listdir(bg_dir) if f.endswith((".png", ".jpg", ".jpeg"))])
 
-    # 상태 초기화
-    if bg_files:
-        if "bg_index" not in st.session_state:
-            st.session_state.bg_index = 0
-        if "nav_action" not in st.session_state:
-            st.session_state.nav_action = None
+    # ✅ profile.json에서 저장된 배경 이미지 불러와 인덱스 초기화
+    profile_path = os.path.join(user_folder, "profile.json")
+    default_bg_index = 0
+    if os.path.exists(profile_path):
+        with open(profile_path, "r", encoding="utf-8") as f:
+            profile_data = json.load(f)
+            saved_bg = profile_data.get("background_image")
+            if saved_bg in bg_files:
+                default_bg_index = bg_files.index(saved_bg)
+    if "bg_index" not in st.session_state:
+        st.session_state.bg_index = default_bg_index
+    if "nav_action" not in st.session_state:
+        st.session_state.nav_action = None
 
-        # 이미지 미리보기
-        selected_bg = bg_files[st.session_state.bg_index]
-        st.image(os.path.join(bg_dir, selected_bg), width = 430)
+    # 현재 선택된 배경 이미지 경로
+    selected_bg = bg_files[st.session_state.bg_index]
+    bg_path = os.path.join(bg_dir, selected_bg)
 
-        # 버튼을 누르면 상태에만 기록
-        col1, col2 = st.columns([1, 1])
-        with col1:
-            if st.button("◀ 이전"):
-                st.session_state.nav_action = "prev"
-        with col2:
-            if st.button("다음 ▶"):
-                st.session_state.nav_action = "next"
+    # base64 인코딩 함수
+    @st.cache_data
+    def get_base64(path):
+        with open(path, "rb") as f:
+            return base64.b64encode(f.read()).decode()
 
-        # 버튼 클릭에 따른 인덱스 변경은 한 번만 처리
-        if st.session_state.nav_action == "prev":
-            st.session_state.bg_index = (st.session_state.bg_index - 1) % len(bg_files)
-            st.session_state.nav_action = None
-            st.experimental_rerun()  # 즉시 반영
+    # base64 인코딩
+    bg_base64 = get_base64(bg_path)
+    card_base64 = get_base64("sample_card.png")  # <- 방금 업로드하신 오버레이 이미지로 경로 확인
 
-        elif st.session_state.nav_action == "next":
-            st.session_state.bg_index = (st.session_state.bg_index + 1) % len(bg_files)
-            st.session_state.nav_action = None
-            st.experimental_rerun()
+    # 열 배치
+    col1, col2 = st.columns([1, 1])
 
-        st.markdown(f"**선택된 배경:** `{selected_bg}`")
-    else:
-        st.warning("⚠️ 사용할 수 있는 배경 이미지가 없습니다.")
+    with col1:
+        st.markdown(
+            f"""
+            <div style="position: relative; width: 100%; padding-top: 71.43%; border-radius: 12px; overflow: hidden; margin-top: 12px; margin-bottom: 20px;">
+                <!-- 비율 7:5 → padding-top: (5/7)*100% ≈ 71.43% -->
+                <img src="data:image/png;base64,{bg_base64}"
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" />
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        
+    with col2:
+        st.markdown(
+            f"""
+            <div style="position: relative; width: 100%; padding-top: 71.43%; border-radius: 12px; overflow: hidden; margin-top: 12px; margin-bottom: 20px;">
+                <!-- 비율 7:5 → padding-top: (5/7)*100% ≈ 71.43% -->
+                <img src="data:image/png;base64,{bg_base64}"
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" />
+                <img src="data:image/png;base64,{card_base64}"
+                    style="position: absolute; top: 50%; left: 50%; width: 91%; aspect-ratio: 2 / 1;
+                            transform: translate(-50%, -50%); object-fit: contain;" />
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+    # 버튼 영역
+    def go_prev():
+        st.session_state.bg_index = (st.session_state.bg_index - 1) % len(bg_files)
+
+    def go_next():
+        st.session_state.bg_index = (st.session_state.bg_index + 1) % len(bg_files)
+
+    col1, col2, col3, col4, col5 = st.columns([1, 2, 2, 2, 1])
+
+    with col2:
+        st.button("◀ 이전", use_container_width=True, on_click=go_prev)
+
+    with col3:
+        st.markdown(
+            f"<div style='text-align: center; padding-top: 10px; font-weight: 500;'>"
+            f"{st.session_state.bg_index + 1} / {len(bg_files)}</div>",
+            unsafe_allow_html=True
+        )
+
+    with col4:
+        st.button("다음 ▶", use_container_width=True, on_click=go_next)
+
+    # 선택 결과 저장
+    profile_data["background_image"] = selected_bg
 
     # 저장용
     profile_data["background_image"] = selected_bg
     
     st.markdown("")
     st.markdown("---")
+        
+#------------------------- 테마 색상 선택 -------------------------        
+    st.markdown("")
+    st.markdown("##### 📍 테마 색상 선택", unsafe_allow_html=True)
+    
+    theme_color = st.color_picker("", value=st.session_state.get("theme_color", "#f79901"))
+    st.session_state["theme_color"] = theme_color
+    
+    st.markdown("")
+    st.markdown("---")
+    
+#------------------------- 저장/전자명함 생성 -------------------------   
 
     col1, col2 = st.columns(2)
 
     with col1:
         if st.button("💾 저장하기", use_container_width=True):
+            for key in fields:
+                profile_data[key] = st.session_state.get(key, "")
+            profile_data["histories"] = st.session_state.histories
+            profile_data["background_image"] = selected_bg
+            profile_data["theme_color"] = theme_color
+
             with open(profile_path, "w", encoding="utf-8") as f:
                 json.dump(profile_data, f, ensure_ascii=False, indent=2)
             st.success("✅ 프로필 정보가 저장되었습니다!")
 
     with col2:
         if st.button("▶️ 모바일 명함 생성하기", use_container_width=True):
-            base_url = "https://goodrich-profile.onrender.com/view"
+            base_url = "http://localhost:8501/view"
             session_id = st.session_state['session_id']
-            view_url = f"{base_url}?session_id={session_id}"
+            timestamp = int(time.time())  # 초 단위 현재 시간
+            view_url = f"{base_url}?session_id={session_id}&nocache={timestamp}"
 
             # 새 창에서 열 수 있는 안전한 링크 제공
             st.markdown(
