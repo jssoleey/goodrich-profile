@@ -243,7 +243,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
         components.html(
             f"""
             <div style="display: flex; justify-content: center; margin-top: 0;">
-                <div style="width: 350px; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif; overflow: auto;">
+                <div style="width: 350px; padding: 15px 0 15px 0; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif; overflow: auto;">
                     <link rel="preconnect" href="https://fonts.googleapis.com">
                     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                     <link href="https://fonts.googleapis.com/css2?family=Galada&display=swap" rel="stylesheet">
@@ -269,7 +269,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
     histories = profile.get("histories", [])
     
     num_items = len(histories)
-    dynamic_timeline_height = 192 + (num_items - 1) * 78
+    dynamic_timeline_height = 192 + (num_items - 1) * 80
     
     if histories:
         timeline_items = ""
@@ -287,7 +287,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
 
         components.html(f"""
         <div style="display: flex; justify-content: center; margin-top: 0;">
-            <div style="width: 350px; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif;">
+            <div style="width: 350px; padding: 15px 0 0 0; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif;">
                 <link rel="preconnect" href="https://fonts.googleapis.com">
                     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                     <link href="https://fonts.googleapis.com/css2?family=Galada&display=swap" rel="stylesheet">
@@ -301,7 +301,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                     ">
                         CAREER
                     </div>
-                <div style="position: relative; padding-left: 14px; border-left: 4px solid {theme_color}; margin-left: 15px;">
+                <div style="position: relative; padding-left: 14px; border-left: 4px solid {theme_color}; margin-left: 30px;">
                     <style>
                         .item {{
                             position: relative;
@@ -352,7 +352,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                 slide_items += f"""
                 <div class="swiper-slide">
                     <div style="text-align: center;">
-                        <img src="data:image/png;base64,{img_base64}" style="width: 85%; border-radius: 10px;" />
+                        <img src="data:image/png;base64,{img_base64}" style="width: 90%; border-radius: 10px;" />
                     </div>
                 </div>
                 """
@@ -364,7 +364,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
             <link href="https://fonts.googleapis.com/css2?family=Galada&display=swap" rel="stylesheet">
             
             <div style="display: flex; justify-content: center; margin: 0;">
-                <div style="width: 350px; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif;">
+                <div style="width: 100%; max-width: 350px; padding: 15px 0 15px 0; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif;">
                     <div style="font-family: 'Galada', cursive; font-size: 20px; text-align: center; color: {theme_color}; margin-top: 10px; margin-bottom: 25px;">
                         GALLERY
                     </div>
@@ -382,6 +382,13 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                 margin-top: 15px !important;
                 text-align: center;
             }}
+            .swiper-slide {{
+                box-sizing: border-box;
+                overflow: visible !important;
+            }}
+            .swiper {{
+                overflow: visible !important;
+            }}
             </style>
             <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
             <script>
@@ -395,12 +402,12 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
             </script>
             """
 
-            components.html(gallery_html, height=324)
+            components.html(gallery_html, height=320)
         
         # -------------------- LOCATION --------------------
         map_embed_code = f"""
         <div style="display: flex; justify-content: center; margin-top: 20px;">
-            <div style="width: 350px; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif;">        
+            <div style="width: 350px; padding: 15px 0 15px 0; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif;">        
                     <link rel="preconnect" href="https://fonts.googleapis.com">
                     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                     <link href="https://fonts.googleapis.com/css2?family=Galada&display=swap" rel="stylesheet">
