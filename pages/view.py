@@ -8,17 +8,34 @@ import textwrap
 
 st.set_page_config(page_title="전자명함 보기", layout="wide")
 
-st.markdown("""
+# session_id 처리 및 경로 설정
+session_id = st.query_params.get("session_id")
+if not session_id:
+    st.error("session_id가 포함되지 않았습니다.")
+    st.stop()
+
+DATA_DIR = "/data"
+user_folder = os.path.join(DATA_DIR, session_id)
+profile_path = os.path.join(user_folder, "profile.json")
+
+if not os.path.exists(profile_path):
+    st.error("⚠️ 아직 명함 정보가 저장되지 않았습니다.")
+    st.stop()
+
+# profile.json 로드
+with open(profile_path, "r", encoding="utf-8") as f:
+    profile_data = json.load(f)
+
+background_color = profile_data.get("background_color", "#ffffff")
+
+st.markdown(f"""
     <style>
-    [data-testid="stAppViewContainer"] {
-        background-color: #fffcf7 !important;
-    }
-    body {
-        background-color: #ff69b4 !important;
-    }
+    [data-testid="stAppViewContainer"] {{
+        background-color: {background_color} !important;
+    }}
     /* 사이드바 숨기기 */
-    [data-testid="stSidebar"] {display: none;}
-    [data-testid="collapsedControl"] {display: none;}
+    [data-testid="stSidebar"] {{display: none;}}
+    [data-testid="collapsedControl"] {{display: none;}}
     </style>
 """, unsafe_allow_html=True)
 
@@ -408,7 +425,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
             </script>
             """
 
-            components.html(gallery_html, height=315)
+            components.html(gallery_html, height=335)
         
         # -------------------- LOCATION --------------------
         map_embed_code = f"""
