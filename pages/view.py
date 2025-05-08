@@ -21,10 +21,16 @@ session_id = query_params.get("session_id", [None])[0]
 
 user_folder = None
 if session_id:
-    for folder in os.listdir("/data"):
-        if session_id in folder:
-            user_folder = os.path.join("/data", folder)
-            break
+    user_folder = os.path.join("/data", session_id)
+    if not os.path.exists(user_folder):
+        st.error("❌ 존재하지 않는 session_id입니다.")
+        st.stop()
+
+# (아래에 profile.json 체크도 같이)
+profile_path = os.path.join(user_folder, "profile.json")
+if not os.path.exists(profile_path):
+    st.error("⚠️ 아직 명함 정보가 저장되지 않았습니다.")
+    st.stop()
 
 def format_phone(number: str, type_: str) -> str:
     number = re.sub(r"\D", "", number)
