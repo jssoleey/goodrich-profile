@@ -8,6 +8,27 @@ import textwrap
 
 st.set_page_config(page_title="전자명함 보기", layout="wide")
 
+# session_id 추출
+session_id = st.query_params.get("session_id")
+
+# 기본 경로
+DATA_DIR = "/data"
+user_folder = os.path.join(DATA_DIR, session_id) if session_id else "❌ session_id 없음"
+profile_path = os.path.join(user_folder, "profile.json")
+
+# 디버깅 출력
+st.markdown("### 🧩 디버깅 정보", unsafe_allow_html=True)
+st.code(f"""
+📄 전달받은 session_id: {session_id}
+
+📁 예상되는 user_folder 경로: {user_folder}
+
+📂 /data 내 실제 폴더들:
+{os.listdir(DATA_DIR) if os.path.exists(DATA_DIR) else '❌ /data 폴더 없음'}
+
+📝 profile.json 존재 여부: {os.path.exists(profile_path)}
+""", language="text")
+
 st.markdown("""
     <style>
     /* 사이드바 숨기기 */
