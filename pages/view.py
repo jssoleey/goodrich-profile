@@ -64,6 +64,8 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
     fax = format_phone(profile.get("fax", ""), "fax")
     email = profile.get("email", "")
     introduction = profile.get("introduction", "")
+    # ✅ 테마 색상 불러오기 (기본값 유지)
+    theme_color = profile.get("theme_color", "#f79901")
 
     bg_file = profile.get("background_image", "bg1.png")  # profile.json의 키 이름을 정확히
     background_img_path = os.path.join("backgrounds", bg_file)
@@ -172,7 +174,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
         """, height=120)
 
         
-        # 프로필 이미지 표시 (있을 경우)
+        # -------------------- 프로필 이미지 --------------------
         img_path = os.path.join(user_folder, "profile.jpg")
         if os.path.exists(img_path):
             img_base64 = get_base64_img(img_path)
@@ -190,6 +192,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                 </div>
             """, height=200)
             
+        # -------------------- 전화번호, 이메일, 팩스 --------------------
         mobile = format_phone(profile.get("mobile", ""), "mobile")
         email = profile.get("email", "")
         fax = format_phone(profile.get("fax", ""), "fax")
@@ -222,7 +225,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
         </div>
         """, height=130)
 
-        # 소개글 자동 줄바꿈 + 줄 수 계산 함수
+    # -------------------- INTRODUCTION --------------------
         def get_wrapped_text_and_line_count(text: str, chars_per_line: int = 20):
             wrapped_lines = []
             for line in text.split("\n"):
@@ -248,7 +251,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                         font-family: 'Galada', cursive;
                         font-size: 20px;
                         text-align: center;
-                        color: #f79901;
+                        color: {theme_color};
                         margin-top: 10px;
                         margin-bottom: 25px;
                     ">
@@ -262,11 +265,11 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
         )
     
     
-    # 이력    
+    # -------------------- CAREER --------------------    
     histories = profile.get("histories", [])
     
     num_items = len(histories)
-    dynamic_timeline_height = 192 + (num_items - 1) * 78
+    dynamic_timeline_height = 192 + (num_items - 1) * 80
     
     if histories:
         timeline_items = ""
@@ -292,13 +295,13 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                         font-family: 'Galada', cursive;
                         font-size: 20px;
                         text-align: center;
-                        color: #f79901;
+                        color: {theme_color};
                         margin-top: 10px;
                         margin-bottom: 25px;
                     ">
                         CAREER
                     </div>
-                <div style="position: relative; padding-left: 14px; border-left: 4px solid #f79901; margin-left: 15px;">
+                <div style="position: relative; padding-left: 14px; border-left: 4px solid {theme_color}; margin-left: 15px;">
                     <style>
                         .item {{
                             position: relative;
@@ -307,7 +310,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                         .dot {{
                             width: 7px;
                             height: 7px;
-                            background: #f79901;
+                            background: {theme_color};
                             border-radius: 50%;
                             position: absolute;
                             left: -9px;
@@ -334,9 +337,69 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
         </div>
         """, height=dynamic_timeline_height+20)
         
-        # 지도
-        map_embed_code = """
-        <div style="display: flex; justify-content: center; margin-top: 0;">
+        # -------------------- GALLERY --------------------
+        photos_dir = os.path.join(user_folder, "photos")
+        photo_files = sorted([
+            f for f in os.listdir(photos_dir)
+            if f.lower().endswith((".jpg", ".jpeg", ".png"))
+        ]) if os.path.exists(photos_dir) else []
+
+        if photo_files:
+            slide_items = ""
+            for file in photo_files:
+                img_path = os.path.join(photos_dir, file)
+                img_base64 = get_base64_img(img_path)
+                slide_items += f"""
+                <div class="swiper-slide">
+                    <div style="text-align: center;">
+                        <img src="data:image/png;base64,{img_base64}" style="width: 75%; border-radius: 10px;" />
+                    </div>
+                </div>
+                """
+
+            gallery_html = f"""
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Galada&display=swap" rel="stylesheet">
+            
+            <div style="display: flex; justify-content: center; margin: 0;">
+                <div style="width: 350px; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif;">
+                    <div style="font-family: 'Galada', cursive; font-size: 20px; text-align: center; color: {theme_color}; margin-top: 10px; margin-bottom: 25px;">
+                        GALLERY
+                    </div>
+                    <div class="swiper mySwiper">
+                        <div class="swiper-wrapper">
+                            {slide_items}
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                </div>
+            </div>
+            <style>
+            .swiper-pagination {{
+                position: relative !important;
+                margin-top: 15px !important;
+                text-align: center;
+            }}
+            </style>
+            <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+            <script>
+            const swiper = new Swiper('.mySwiper', {{
+                loop: true,
+                pagination: {{
+                el: '.swiper-pagination',
+                clickable: true,
+                }},
+            }});
+            </script>
+            """
+
+            components.html(gallery_html, height=353)
+        
+        # -------------------- LOCATION --------------------
+        map_embed_code = f"""
+        <div style="display: flex; justify-content: center; margin-top: 20px;">
             <div style="width: 350px; padding: 15px; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif;">        
                     <link rel="preconnect" href="https://fonts.googleapis.com">
                     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -345,7 +408,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                         font-family: 'Galada', cursive;
                         font-size: 20px;
                         text-align: center;
-                        color: #f79901;
+                        color: {theme_color};
                         margin-top: 10px;
                         margin-bottom: 25px;
                     ">
