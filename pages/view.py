@@ -8,15 +8,15 @@ import textwrap
 
 st.set_page_config(page_title="전자명함 보기", layout="wide")
 
-# session_id 추출
-session_id = st.query_params.get("session_id")
+# ------------------ session_id 및 경로 설정 ------------------
+query_params = st.query_params
+session_id = query_params.get("session_id")
 
-# 기본 경로
 DATA_DIR = "/data"
-user_folder = os.path.join(DATA_DIR, session_id) if session_id else "❌ session_id 없음"
-profile_path = os.path.join(user_folder, "profile.json")
+user_folder = os.path.join(DATA_DIR, session_id) if session_id else None
+profile_path = os.path.join(user_folder, "profile.json") if user_folder else None
 
-# 디버깅 출력
+# ------------------ 디버깅 정보 출력 ------------------
 st.markdown("### 🧩 디버깅 정보", unsafe_allow_html=True)
 st.code(f"""
 📄 전달받은 session_id: {session_id}
@@ -26,35 +26,29 @@ st.code(f"""
 📂 /data 내 실제 폴더들:
 {os.listdir(DATA_DIR) if os.path.exists(DATA_DIR) else '❌ /data 폴더 없음'}
 
-📝 profile.json 존재 여부: {os.path.exists(profile_path)}
+📝 profile.json 존재 여부: {os.path.exists(profile_path) if profile_path else '경로 없음'}
 """, language="text")
 
+# ------------------ 유효성 검사 ------------------
+if not session_id:
+    st.error("❌ session_id가 URL에 포함되지 않았습니다.")
+    st.stop()
+
+if not os.path.exists(user_folder):
+    st.error("❌ 존재하지 않는 session_id입니다.")
+    st.stop()
+
+if not os.path.exists(profile_path):
+    st.error("⚠️ 아직 명함 정보가 저장되지 않았습니다.")
+    st.stop()
+
+# ------------------ 사이드바 숨기기 ------------------
 st.markdown("""
     <style>
-    /* 사이드바 숨기기 */
     [data-testid="stSidebar"] {display: none;}
     [data-testid="collapsedControl"] {display: none;}
     </style>
 """, unsafe_allow_html=True)
-
-query_params = st.query_params
-session_id = st.query_params.get("session_id")
-if not session_id:
-    st.error("session_id가 URL에 포함되지 않았습니다.")
-    st.stop()
-
-user_folder = None
-if session_id:
-    user_folder = os.path.join("/data", session_id)
-    if not os.path.exists(user_folder):
-        st.error("❌ 존재하지 않는 session_id입니다.")
-        st.stop()
-
-# (아래에 profile.json 체크도 같이)
-profile_path = os.path.join(user_folder, "profile.json")
-if not os.path.exists(profile_path):
-    st.error("⚠️ 아직 명함 정보가 저장되지 않았습니다.")
-    st.stop()
 
 def format_phone(number: str, type_: str) -> str:
     number = re.sub(r"\D", "", number)
