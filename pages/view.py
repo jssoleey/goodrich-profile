@@ -269,7 +269,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
     histories = profile.get("histories", [])
     
     num_items = len(histories)
-    dynamic_timeline_height = 192 + (num_items - 1) * 80
+    dynamic_timeline_height = 177 + (num_items - 1) * 82
     
     if histories:
         timeline_items = ""
@@ -402,7 +402,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
             </script>
             """
 
-            components.html(gallery_html, height=320)
+            components.html(gallery_html, height=310)
         
         # -------------------- LOCATION --------------------
         map_embed_code = f"""
