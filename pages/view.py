@@ -8,6 +8,8 @@ import textwrap
 
 st.set_page_config(page_title="전자명함 보기", layout="wide")
 
+st.write("🧩 전달받은 session_id:", session_id)
+
 st.markdown("""
     <style>
     /* 사이드바 숨기기 */
