@@ -21,9 +21,10 @@ session_id = query_params.get("session_id", [None])[0]
 
 user_folder = None
 if session_id:
-    user_folder = os.path.join("/data", session_id)
-    if not os.path.exists(user_folder):
-        user_folder = None
+    for folder in os.listdir("/data"):
+        if session_id in folder:
+            user_folder = os.path.join("/data", folder)
+            break
 
 def format_phone(number: str, type_: str) -> str:
     number = re.sub(r"\D", "", number)
