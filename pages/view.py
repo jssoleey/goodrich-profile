@@ -22,20 +22,6 @@ if not session_id:
     st.error("session_id가 URL에 포함되지 않았습니다.")
     st.stop()
 
-# ✅ 여기에 출력하세요
-st.write("🧩 전달받은 session_id:", session_id)
-
-user_folder = None
-if session_id:
-    user_folder = os.path.join("/data", session_id)
-    st.write("📁 예상되는 user_folder 경로:", user_folder)
-    st.write("📂 /data 내 실제 폴더들:", os.listdir("/data"))
-    st.write("📝 profile.json 존재 여부:", os.path.exists(os.path.join(user_folder, "profile.json")))
-
-    if not os.path.exists(user_folder):
-        st.error("❌ 존재하지 않는 session_id입니다.")
-        st.stop()
-
 user_folder = None
 if session_id:
     user_folder = os.path.join("/data", session_id)
