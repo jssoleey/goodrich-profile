@@ -509,10 +509,20 @@ elif st.session_state.page == "input":
         
 #------------------------- 테마 색상 선택 -------------------------        
     st.markdown("")
-    st.markdown("##### 📍 테마 색상 선택", unsafe_allow_html=True)
-    
-    theme_color = st.color_picker("", value=st.session_state.get("theme_color", "#f79901"))
-    st.session_state["theme_color"] = theme_color
+    st.markdown("##### 📍 테마 및 배경 색상 선택", unsafe_allow_html=True)
+    st.markdown("")
+    col1, col2 = st.columns(2)
+    with col1 :
+        st.markdown("###### 테마 색상 선택", unsafe_allow_html=True)
+        
+        theme_color = st.color_picker("", value=st.session_state.get("theme_color", "#f79901"))
+        st.session_state["theme_color"] = theme_color
+        
+    with col2 :
+        st.markdown("###### 배경 색상 선택", unsafe_allow_html=True)
+        
+        background_color = st.color_picker("", value=st.session_state.get("background_color", "#fffcf7"))
+        st.session_state["background_color"] = background_color
     
     st.markdown("")
     st.markdown("---")
@@ -528,6 +538,7 @@ elif st.session_state.page == "input":
             profile_data["histories"] = st.session_state.histories
             profile_data["background_image"] = selected_bg
             profile_data["theme_color"] = theme_color
+            profile_data["background_color"] = background_color
 
             with open(profile_path, "w", encoding="utf-8") as f:
                 json.dump(profile_data, f, ensure_ascii=False, indent=2)
@@ -535,7 +546,7 @@ elif st.session_state.page == "input":
 
     with col2:
         if st.button("▶️ 모바일 명함 생성하기", use_container_width=True):
-            base_url = "https://goodrich-profile.onrender.com/view"
+            base_url = "http://localhost:8501/view"
             session_id = st.session_state['session_id']
             timestamp = int(time.time())  # 초 단위 현재 시간
             view_url = f"{base_url}?session_id={session_id}&nocache={timestamp}"
