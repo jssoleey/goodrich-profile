@@ -8,7 +8,9 @@ import textwrap
 
 st.set_page_config(page_title="전자명함 보기", layout="wide")
 
+## 디버깅
 st.write("🧩 전달받은 session_id:", session_id)
+st.write("📁 /data 폴더 내용:", os.listdir("/data"))
 
 st.markdown("""
     <style>
