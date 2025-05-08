@@ -315,3 +315,9 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+
+##
+st.write("session_id:", session_id)
+st.write("user_folder:", user_folder)
+st.write("profile.json exists:", os.path.exists(os.path.join(user_folder, "profile.json")))
