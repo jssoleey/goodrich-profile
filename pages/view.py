@@ -17,7 +17,10 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 query_params = st.query_params
-session_id = query_params.get("session_id", [None])[0]
+session_id = st.query_params.get("session_id")
+if not session_id:
+    st.error("session_id가 URL에 포함되지 않았습니다.")
+    st.stop()
 
 # ✅ 여기에 출력하세요
 st.write("🧩 전달받은 session_id:", session_id)
