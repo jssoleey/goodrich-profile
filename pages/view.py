@@ -352,7 +352,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                 slide_items += f"""
                 <div class="swiper-slide">
                     <div style="text-align: center;">
-                        <img src="data:image/png;base64,{img_base64}" style="width: 75%; border-radius: 10px;" />
+                        <img src="data:image/png;base64,{img_base64}" style="width: 85%; border-radius: 10px;" />
                     </div>
                 </div>
                 """
@@ -395,7 +395,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
             </script>
             """
 
-            components.html(gallery_html, height=305)
+            components.html(gallery_html, height=324)
         
         # -------------------- LOCATION --------------------
         map_embed_code = f"""
