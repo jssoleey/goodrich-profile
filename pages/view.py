@@ -10,6 +10,9 @@ st.set_page_config(page_title="전자명함 보기", layout="wide")
 
 st.markdown("""
     <style>
+    body {
+        background-color: #ff69b4 !important;
+    }
     /* 사이드바 숨기기 */
     [data-testid="stSidebar"] {display: none;}
     [data-testid="collapsedControl"] {display: none;}
@@ -269,7 +272,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
     histories = profile.get("histories", [])
     
     num_items = len(histories)
-    dynamic_timeline_height = 177 + (num_items - 1) * 82
+    dynamic_timeline_height = 177 + (num_items - 1) * 78
     
     if histories:
         timeline_items = ""
@@ -402,7 +405,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
             </script>
             """
 
-            components.html(gallery_html, height=310)
+            components.html(gallery_html, height=315)
         
         # -------------------- LOCATION --------------------
         map_embed_code = f"""
