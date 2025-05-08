@@ -10,6 +10,9 @@ st.set_page_config(page_title="전자명함 보기", layout="wide")
 
 st.markdown("""
     <style>
+    [data-testid="stAppViewContainer"] {
+        background-color: #fffcf7 !important;
+    }
     body {
         background-color: #ff69b4 !important;
     }
