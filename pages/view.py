@@ -284,7 +284,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                 </div>
             </div>
             """,
-            height=dynamic_height + 35
+            height=dynamic_height + 40
         )
     
     
