@@ -316,6 +316,8 @@ elif st.session_state.page == "input":
             )
 
             if st.button("💾 이미지 저장", use_container_width=True):
+                if cropped_img.mode in ("RGBA", "P"):
+                    cropped_img = cropped_img.convert("RGB")
                 cropped_img.save(profile_img_path)
                 st.session_state["uploaded_now"] = False
                 st.session_state["just_saved"] = True
