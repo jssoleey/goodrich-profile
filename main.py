@@ -68,6 +68,13 @@ st.markdown("""
         color: #333333;
         border-radius: 8px;
     }
+    [data-testid="stColorPicker"] input[type="color"] {
+        width: 100px !important;
+        height: 100px !important;
+        border: none;
+        padding: 0;
+        border-radius: 50px;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -509,32 +516,59 @@ elif st.session_state.page == "input":
     st.markdown("")
     st.markdown("---")
         
-#------------------------- 테마 색상 선택 -------------------------        
+#------------------------- 테마 색상 선택 -------------------------           
     st.markdown("")
     st.markdown("##### 📍 테마 및 배경 색상 선택", unsafe_allow_html=True)
     st.markdown("")
-    col1, col2 = st.columns(2)
-    with col1 :
-        st.markdown("###### 테마 색상 선택", unsafe_allow_html=True)
-        
-        theme_color = st.color_picker("", value=st.session_state.get("theme_color", "#f79901"))
-        st.session_state["theme_color"] = theme_color
-        
-    with col2 :
+
+    col1, col2, col3 = st.columns([1, 1, 2])
+
+    with col1:
         st.markdown("###### 배경 색상 선택", unsafe_allow_html=True)
-        
         background_color = st.color_picker("", value=st.session_state.get("background_color", "#fffcf7"))
         st.session_state["background_color"] = background_color
-    
-    st.markdown("")
-    st.markdown("---")
-    
-#------------------------- 저장/전자명함 생성 -------------------------   
 
+    with col2:
+        st.markdown("###### 테마 색상 선택", unsafe_allow_html=True)
+        theme_color = st.color_picker("", value=st.session_state.get("theme_color", "#f79901"))
+        st.session_state["theme_color"] = theme_color
+
+    with col3:
+        st.markdown("###### 🎨 색상 미리 보기", unsafe_allow_html=True)
+        st.components.v1.html(f"""
+            <div style="width: 90%; background-color: {background_color}; padding: 20px; border-radius: 12px;">
+                <link rel="preconnect" href="https://fonts.googleapis.com">
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                <link href="https://fonts.googleapis.com/css2?family=Galada&display=swap" rel="stylesheet">
+                <div style="
+                    padding: 15px 0 15px 0;
+                    background-color: #fff;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                    font-family: sans-serif;
+                    overflow: auto;
+                    text-align: center;
+                ">
+                    <div style="
+                        font-family: 'Galada', cursive;
+                        font-size: 20px;
+                        color: {theme_color};
+                        margin-top: 10px;
+                        margin-bottom: 25px;
+                    ">
+                        TEXT
+                    </div>
+                </div>
+            </div>
+        """, height=150)
+        
+    st.markdown("")
+    st.markdown("---")    
+#------------------------- 저장/전자명함 생성 -------------------------   
     col1, col2 = st.columns(2)
 
     with col1:
-        if st.button("💾 저장하기", use_container_width=True):
+        if st.button("💾 변경 내용 저장하기", use_container_width=True):
             for key in fields:
                 profile_data[key] = st.session_state.get(key, "")
             profile_data["histories"] = st.session_state.histories
@@ -547,8 +581,8 @@ elif st.session_state.page == "input":
             st.success("✅ 프로필 정보가 저장되었습니다!")
 
     with col2:
-        if st.button("▶️ 모바일 명함 생성하기", use_container_width=True):
-            base_url = "https://goodrich-profile.onrender.com/view"
+        if st.button("▶️ 모바일 명함 바로가기", use_container_width=True):
+            base_url = "http://localhost:8501/view"
             session_id = st.session_state['session_id']
             timestamp = int(time.time())  # 초 단위 현재 시간
             view_url = f"{base_url}?session_id={session_id}&nocache={timestamp}"
