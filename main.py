@@ -582,7 +582,7 @@ elif st.session_state.page == "input":
 
     with col2:
         if st.button("▶️ 모바일 명함 바로가기", use_container_width=True):
-            base_url = "http://localhost:8501/view"
+            base_url = "https://goodrich-profile.onrender.com/view"
             session_id = st.session_state['session_id']
             timestamp = int(time.time())  # 초 단위 현재 시간
             view_url = f"{base_url}?session_id={session_id}&nocache={timestamp}"
