@@ -283,7 +283,7 @@ elif st.session_state.page == "input":
                     margin-right: 10px;
                 '>
                     <img src="data:image/png;base64,{cropped_img_to_base64(Image.open(profile_img_path))}"
-                        style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%; border: 1px solid #ccc;" />
+                        style="width: 100px; height: 100px; object-fit: cover; border-radius: 35%; border: 1px solid #ccc;" />
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -366,7 +366,7 @@ elif st.session_state.page == "input":
 
         cropped_img = st_cropper(
             img_copy,
-            aspect_ratio=(3.5, 2),
+            aspect_ratio=(3, 4),
             box_color='#f79901',
             return_type='image',
             realtime_update=True
@@ -516,13 +516,14 @@ elif st.session_state.page == "input":
     st.markdown("")
     st.markdown("---")
         
-#------------------------- 테마 색상 선택 -------------------------           
+#------------------------- 테마 색상 선택 -------------------------                   
     st.markdown("")
     st.markdown("##### 📍 테마 및 배경 색상 선택", unsafe_allow_html=True)
     st.markdown("")
 
     col1, col2, col3 = st.columns([1, 1, 2])
 
+    # 🎨 기존 수동 선택 유지
     with col1:
         st.markdown("###### 배경 색상 선택", unsafe_allow_html=True)
         background_color = st.color_picker("", value=st.session_state.get("background_color", "#fffcf7"))
@@ -533,10 +534,64 @@ elif st.session_state.page == "input":
         theme_color = st.color_picker("", value=st.session_state.get("theme_color", "#f79901"))
         st.session_state["theme_color"] = theme_color
 
+    # 🎯 추천 색상 조합 표시
+    st.markdown("###### 🎨 추천 색상 조합", unsafe_allow_html=True)
+
+    # 🎨 추천 색상 세트 정의
+    COLOR_PAIRS = [
+        {"bg": "#fff7e6", "theme": "#f79901"},
+        {"bg": "#e8f9fd", "theme": "#4dabf7"},
+        {"bg": "#fef6fb", "theme": "#e64980"},
+        {"bg": "#f3fce8", "theme": "#2b8a3e"},
+        {"bg": "#f0f0ff", "theme": "#5f3dc4"},
+    ]
+
+    # ✅ CSS 스타일: 팔레트용 div + 숨겨진 버튼
+    st.markdown("""
+        <style>
+        .palette-box {
+            width: 100%;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .palette-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            border-color: #888;
+        }
+        .palette-button {
+            display: none;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    # ✅ 팔레트 구성: 버튼은 숨기고, div를 누르면 버튼 클릭 발생
+    set_cols = st.columns(len(COLOR_PAIRS))
+    for i, pair in enumerate(COLOR_PAIRS):
+        with set_cols[i]:
+            button_key = f"color_select_{i}"
+            clicked = st.button("선택", key=button_key, use_container_width = True)
+
+            st.markdown(f"""
+                <div class="palette-box" onclick="document.querySelector('[data-testid={button_key}]').click()" 
+                    style="background: linear-gradient(to right, {pair['bg']} 50%, {pair['theme']} 50%);">
+                </div>
+            """, unsafe_allow_html=True)
+
+            if clicked:
+                st.session_state["background_color"] = pair["bg"]
+                st.session_state["theme_color"] = pair["theme"]
+                st.rerun()
+
+    # ✅ 색상 미리보기
     with col3:
-        st.markdown("###### 🎨 색상 미리 보기", unsafe_allow_html=True)
+        st.markdown("###### 색상 미리 보기", unsafe_allow_html=True)
         st.components.v1.html(f"""
-            <div style="width: 90%; background-color: {background_color}; padding: 20px; border-radius: 12px;">
+            <div style="width: 90%; background-color: {st.session_state['background_color']}; padding: 20px; border-radius: 12px;">
                 <link rel="preconnect" href="https://fonts.googleapis.com">
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                 <link href="https://fonts.googleapis.com/css2?family=Galada&display=swap" rel="stylesheet">
@@ -552,7 +607,7 @@ elif st.session_state.page == "input":
                     <div style="
                         font-family: 'Galada', cursive;
                         font-size: 20px;
-                        color: {theme_color};
+                        color: {st.session_state['theme_color']};
                         margin-top: 10px;
                         margin-bottom: 25px;
                     ">
@@ -561,14 +616,14 @@ elif st.session_state.page == "input":
                 </div>
             </div>
         """, height=150)
-        
+
     st.markdown("")
-    st.markdown("---")    
+    st.markdown("---")   
 #------------------------- 저장/전자명함 생성 -------------------------   
     col1, col2 = st.columns(2)
 
     with col1:
-        if st.button("💾 변경 내용 저장하기", use_container_width=True):
+        if st.button("💾 저장하기", use_container_width=True):
             for key in fields:
                 profile_data[key] = st.session_state.get(key, "")
             profile_data["histories"] = st.session_state.histories
@@ -581,8 +636,8 @@ elif st.session_state.page == "input":
             st.success("✅ 프로필 정보가 저장되었습니다!")
 
     with col2:
-        if st.button("▶️ 모바일 명함 바로가기", use_container_width=True):
-            base_url = "https://goodrich-profile.onrender.com/view"
+        if st.button("▶️ 모바일 명함 생성하기", use_container_width=True):
+            base_url = "http://localhost:8501/view"
             session_id = st.session_state['session_id']
             timestamp = int(time.time())  # 초 단위 현재 시간
             view_url = f"{base_url}?session_id={session_id}&nocache={timestamp}"
