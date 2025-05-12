@@ -5,6 +5,8 @@ import re
 import json
 import base64
 import textwrap
+import qrcode
+from io import BytesIO
 
 st.set_page_config(page_title="전자명함 보기", layout="wide")
 
@@ -205,7 +207,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                 <div style="display: flex; justify-content: center; margin-top: 0;">
                     <div style="
                         width: 150px; height: 150px;
-                        border-radius: 50%;
+                        border-radius: 35%;
                         overflow: hidden;
                         border: 2px solid #ddd;
                         box-shadow: 0 2px 6px rgba(0,0,0,0.1);
@@ -425,7 +427,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
             </script>
             """
 
-            components.html(gallery_html, height=335)
+            components.html(gallery_html, height=575)
         
         # -------------------- LOCATION --------------------
         map_embed_code = f"""
@@ -458,7 +460,36 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
         </div>
         """
 
-        st.components.v1.html(map_embed_code, height=500)
+        st.components.v1.html(map_embed_code, height=450)
+        
+        # -------------------- QR code --------------------
+        def generate_qr_code(url: str):
+            qr = qrcode.QRCode(box_size=3, border=2)
+            qr.add_data(url)
+            qr.make(fit=True)
+            img = qr.make_image(fill_color="black", back_color="white")
+
+            buf = BytesIO()
+            img.save(buf, format="PNG")
+            img_base64 = base64.b64encode(buf.getvalue()).decode()
+            return img_base64
+
+        # 명함 링크 생성
+        base_url = "https://your-domain.com/view"  # ← 배포된 주소에 맞게 수정!
+        qr_url = f"{base_url}?session_id={session_id}"
+
+        # QR 이미지 생성
+        qr_base64 = generate_qr_code(qr_url)
+
+        # 하단에 표시
+        st.markdown("")
+        st.components.v1.html(f"""
+            <div style="display: flex; justify-content: center; margin-top: 0;">
+                <div style="text-align: center;">
+                    <img src="data:image/png;base64,{qr_base64}" width="60" />
+                </div>
+            </div>
+        """, height=180)
 
     else:
         st.error("⚠️ 배경 이미지가 존재하지 않습니다.")
