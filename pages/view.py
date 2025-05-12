@@ -322,7 +322,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                 </div>
             </div>
             """,
-            height=dynamic_height + 30
+            height=dynamic_height + 40
         )
     
     
@@ -396,7 +396,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                 </div>
             </div>
         </div>
-        """, height=dynamic_timeline_height+30)
+        """, height=dynamic_timeline_height+40)
         
         # -------------------- GALLERY --------------------
         photos_dir = os.path.join(user_folder, "photos")
@@ -463,7 +463,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
             </script>
             """
 
-            components.html(gallery_html, height=510)
+            components.html(gallery_html, height=520)
         
         # -------------------- LOCATION --------------------
         map_embed_code = f"""
@@ -525,7 +525,28 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                     <img src="data:image/png;base64,{qr_base64}" width="60" />
                 </div>
             </div>
-        """, height=180)
+        """, height=100)
+        
+        # -------------------- 보험사 연락처 --------------------
+        st.markdown("<hr style='margin-top: 30px; margin-bottom: 10px;'>", unsafe_allow_html=True)
+
+        st.components.v1.html("""
+            <div style="font-size: 11px; color: #666; text-align: center; font-family: sans-serif; line-height: 1.5;">
+                <div style="font-weight: bold; margin-bottom: 6px;">[손해보험]</div>
+                <div>메리츠화재 1566-7711&nbsp;&nbsp;&nbsp;&nbsp;KB손해 1544-0114</div>
+                <div>현대해상 1588-5656&nbsp;&nbsp;&nbsp;&nbsp;DB손해보험 1588-0100</div>
+                <div>롯데손해보험 1588-3344&nbsp;&nbsp;&nbsp;&nbsp;MG손해보험 1588-5959</div>
+                <div>삼성화재 1588-5114&nbsp;&nbsp;&nbsp;&nbsp;한화손해보험 1566-8000</div>
+
+                <div style="margin-top: 10px; font-weight: bold; margin-bottom: 6px;">[생명보험]</div>
+                <div>메트라이프 1588-9600&nbsp;&nbsp;&nbsp;&nbsp;AIA생명 1588-9898</div>
+                <div>동양생명 1577-1004&nbsp;&nbsp;&nbsp;&nbsp;라이나생명 1588-0058</div>
+                <div>삼성생명 1588-3114&nbsp;&nbsp;&nbsp;&nbsp;처브라이프 1566-5860</div>
+                <div>한화생명 1588-6363&nbsp;&nbsp;&nbsp;&nbsp;흥국생명 1588-2288</div>
+                <div>DB생명 1588-3131</div>
+            </div>
+        """, height=210)
+
 
     else:
         st.error("⚠️ 배경 이미지가 존재하지 않습니다.")
