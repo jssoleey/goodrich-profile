@@ -3,3 +3,4 @@ uuid
 pillow
 textwrap3
 streamlit-cropper
+qrcode
