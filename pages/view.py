@@ -475,7 +475,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
             return img_base64
 
         # 명함 링크 생성
-        base_url = "https://your-domain.com/view"  # ← 배포된 주소에 맞게 수정!
+        base_url = "https://goodrich-profile.onrender.com/view"  # ← 배포된 주소에 맞게 수정!
         qr_url = f"{base_url}?session_id={session_id}"
 
         # QR 이미지 생성
