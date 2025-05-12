@@ -215,7 +215,43 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                         <img src="data:image/png;base64,{img_base64}" style="width: 100%; height: 100%; object-fit: cover;" />
                     </div>
                 </div>
-            """, height=200)
+            """, height=200) 
+            
+        # -------------------- 전화/문자 버튼 --------------------
+        clean_mobile = re.sub(r"\D", "", profile.get("mobile", ""))  # 숫자만 추출
+
+        st.components.v1.html(f"""
+            <div style="display: flex; justify-content: center; gap: 12px; margin-top: 15px;">
+                <a href="tel:{clean_mobile}" style="
+                    background-color: {theme_color};
+                    width: 100px;
+                    color: white;
+                    text-decoration: none;
+                    padding: 10px 20px;
+                    border-radius: 10px;
+                    font-weight: bold;
+                    font-size: 14px;
+                    align-items: center;
+                    justify-content: center;
+                ">
+                    📞 전화하기
+                </a>
+                <a href="sms:{clean_mobile}" style="
+                    background-color: #888888;
+                    width: 100px;
+                    color: white;
+                    text-decoration: none;
+                    padding: 10px 20px;
+                    border-radius: 10px;
+                    font-weight: bold;
+                    font-size: 14px;
+                    align-items: center;
+                    justify-content: center;
+                ">
+                    💬 문자보내기
+                </a>
+            </div>
+        """, height=65)    
             
         # -------------------- 전화번호, 이메일, 팩스 --------------------
         mobile = format_phone(profile.get("mobile", ""), "mobile")
