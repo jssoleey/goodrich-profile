@@ -263,24 +263,24 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
         <div style="width: 240px; font-family: sans-serif;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <div style="display: flex; align-items: center;">
-                <span style="font-size: 13px; margin-right: 8px;">☎</span>
-                <span style="font-size: 13px; color: #888;">Mobile</span>
+                <span style="font-size: 14px; margin-right: 8px; font-weight: bold;">☎</span>
+                <span style="font-size: 14px; color: #888; font-weight: bold;">Mobile</span>
             </div>
-            <span style="font-size: 13px; color: #000;">{mobile}</span>
+            <span style="font-size: 14px; color: #000; font-weight: bold;">{mobile}</span>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <div style="display: flex; align-items: center;">
-                <span style="font-size: 13px; margin-right: 8px;">✉</span>
-                <span style="font-size: 13px; color: #888;">E-mail</span>
+                <span style="font-size: 14px; margin-right: 8px; font-weight: bold;">✉</span>
+                <span style="font-size: 14px; color: #888; font-weight: bold;">E-mail</span>
             </div>
-            <span style="font-size: 13px; color: #000;">{email}</span>
+            <span style="font-size: 14px; color: #000; font-weight: bold;">{email}</span>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center;">
             <div style="display: flex; align-items: center;">
-                <span style="font-size: 13px; margin-right: 8px;">🖷</span>
-                <span style="font-size: 13px; color: #888;">Fax</span>
+                <span style="font-size: 14px; margin-right: 8px; font-weight: bold;">🖷</span>
+                <span style="font-size: 14px; color: #888; font-weight: bold;">Fax</span>
             </div>
-            <span style="font-size: 13px; color: #000;">{fax}</span>
+            <span style="font-size: 14px; color: #000; font-weight: bold;">{fax}</span>
             </div>
         </div>
         </div>
