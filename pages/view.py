@@ -322,7 +322,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                 </div>
             </div>
             """,
-            height=dynamic_height + 10
+            height=dynamic_height + 30
         )
     
     
@@ -396,7 +396,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
                 </div>
             </div>
         </div>
-        """, height=dynamic_timeline_height+10)
+        """, height=dynamic_timeline_height+30)
         
         # -------------------- GALLERY --------------------
         photos_dir = os.path.join(user_folder, "photos")
@@ -463,7 +463,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
             </script>
             """
 
-            components.html(gallery_html, height=480)
+            components.html(gallery_html, height=510)
         
         # -------------------- LOCATION --------------------
         map_embed_code = f"""
