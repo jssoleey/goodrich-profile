@@ -1,7 +1,9 @@
 import requests
 import base64
+import os
+from dotenv import load_dotenv
 
-# ✅ 사용자 설정값
+load_dotenv()
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 REPO_OWNER = "goodrichplus"
 REPO_NAME = "goodrichplus.github.io"
