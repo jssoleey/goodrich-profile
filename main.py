@@ -644,25 +644,30 @@ elif st.session_state.page == "input":
             
             try:
                 preview_link = upload_to_github(session_id, view_link)
-                st.success("✅ 미리보기 링크 생성 완료!")
 
-                st.markdown(f"""
-                    <input type="text" value="{preview_link}" id="shareLink" readonly style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                    <button onclick="navigator.clipboard.writeText(document.getElementById('shareLink').value)" style="
-                        margin-top: 8px;
-                        background-color: #2b6cb0;
-                        color: white;
-                        padding: 6px 12px;
-                        border: none;
-                        border-radius: 4px;
-                        cursor: pointer;
-                    ">
-                        📋 공유용 링크 복사하기
-                    </button>
-                """, unsafe_allow_html=True)
+                # 공유 링크 복사용 컴포넌트
+                st.text_input("🔗 공유용 링크", value=preview_link, key="copy_link", label_visibility="collapsed")
+
+                if st.button("📋 공유용 링크 복사하기", use_container_width=True):
+                    st.session_state["copied_link"] = preview_link
+                    st.toast("✅ 클립보드에 복사되었습니다!", icon="📎")
+
+                    # JS로 복사 시도 (보조)
+                    st.markdown(f"""
+                    <script>
+                    navigator.clipboard.writeText("{preview_link}");
+                    </script>
+                    """, unsafe_allow_html=True)
+                    
             except Exception as e:
                 st.error("❌ 미리보기 링크 생성 실패")
                 st.text(str(e))
+
+            # 새 창에서 열 수 있는 안전한 링크 제공
+            st.markdown(
+                f'<a href="{view_url}" target="_blank">🔗 👉 새 창에서 명함 보기</a>',
+                unsafe_allow_html=True
+            )
 
 bottom_image_url = URLS["bottom_image"]
 st.markdown("")            
