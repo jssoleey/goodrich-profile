@@ -654,11 +654,6 @@ elif st.session_state.page == "input":
                 st.text(str(e))
                 st.session_state["link_ready"] = False
         
-                    # 새 창에서 열 수 있는 안전한 링크 제공
-                    st.markdown(
-                        f'<a href="{view_url}" target="_blank">🔗 👉 새 창에서 명함 보기</a>',
-                        unsafe_allow_html=True
-                    )
         # 👉 생성 완료 후 UI 출력
         if st.session_state.get("link_ready", False):
         
