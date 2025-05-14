@@ -644,7 +644,22 @@ elif st.session_state.page == "input":
             
             try:
                 preview_link = upload_to_github(session_id, view_link)
-                st.markdown(f"[🔗 👉 새 창에서 명함 보기]({preview_link})", unsafe_allow_html=True)
+                st.success("✅ 미리보기 링크 생성 완료!")
+
+                st.markdown(f"""
+                    <input type="text" value="{preview_link}" id="shareLink" readonly style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                    <button onclick="navigator.clipboard.writeText(document.getElementById('shareLink').value)" style="
+                        margin-top: 8px;
+                        background-color: #2b6cb0;
+                        color: white;
+                        padding: 6px 12px;
+                        border: none;
+                        border-radius: 4px;
+                        cursor: pointer;
+                    ">
+                        📋 공유용 링크 복사하기
+                    </button>
+                """, unsafe_allow_html=True)
             except Exception as e:
                 st.error("❌ 미리보기 링크 생성 실패")
                 st.text(str(e))
