@@ -8,6 +8,7 @@ from PIL import Image
 import base64
 from io import BytesIO
 import time
+from card_uploader import upload_to_github
 
 # ----------------- 설정 -------------------
 URLS = {
@@ -638,15 +639,15 @@ elif st.session_state.page == "input":
     with col2:
         if st.button("▶️ 모바일 명함 생성하기", use_container_width=True):
             base_url = "https://goodrich-profile.onrender.com/view"
-            session_id = st.session_state['session_id']
-            timestamp = int(time.time())  # 초 단위 현재 시간
-            view_url = f"{base_url}?session_id={session_id}&nocache={timestamp}"
-
-            # 새 창에서 열 수 있는 안전한 링크 제공
-            st.markdown(
-                f'<a href="{view_url}" target="_blank">🔗 👉 새 창에서 명함 보기</a>',
-                unsafe_allow_html=True
-            )
+            session_id = st.session_state['session_id']            
+            view_link = f"https://goodrich-profile.onrender.com/view?session_id={session_id}"
+            
+            try:
+                preview_link = upload_to_github(session_id, view_link)
+                st.markdown(f"[🔗 👉 새 창에서 명함 보기]({preview_link})", unsafe_allow_html=True)
+            except Exception as e:
+                st.error("❌ 미리보기 링크 생성 실패")
+                st.text(str(e))
 
 bottom_image_url = URLS["bottom_image"]
 st.markdown("")            
