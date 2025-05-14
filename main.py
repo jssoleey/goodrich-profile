@@ -656,18 +656,10 @@ elif st.session_state.page == "input":
         
         # 👉 생성 완료 후 UI 출력
         if st.session_state.get("link_ready", False):
-        
+
+            st.markdown("###### 공유용 링크(복사 후 붙여넣기)", unsafe_allow_html=True)
             # 공유용 링크 입력창
             st.text_input("🔗 공유용 링크", value=st.session_state["preview_link"], key="copy_link", label_visibility="collapsed")
-        
-            # 복사 버튼
-            if st.button("📋 공유용 링크 복사하기", key="copy_button"):
-                st.toast("✅ 클립보드에 복사되었습니다!", icon="📎")
-                st.markdown(f"""
-                    <script>
-                        navigator.clipboard.writeText("{st.session_state['preview_link']}");
-                    </script>
-                """, unsafe_allow_html=True)
         
             # 새 창에서 명함 보기
             st.markdown(
