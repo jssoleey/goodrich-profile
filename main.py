@@ -645,29 +645,38 @@ elif st.session_state.page == "input":
             view_link = f"https://goodrich-profile.onrender.com/view?session_id={session_id}"
             
             try:
-                preview_link = upload_to_github(session_id, view_link)
-
-                # 공유 링크 복사용 컴포넌트
-                st.text_input("🔗 공유용 링크", value=preview_link, key="copy_link", label_visibility="collapsed")
-
-                if st.button("📋 공유용 링크 복사하기", use_container_width=True):
-                    st.session_state["copied_link"] = preview_link
-                    st.toast("✅ 클립보드에 복사되었습니다!", icon="📎")
-
-                    # JS로 복사 시도 (보조)
-                    st.markdown(f"""
-                    <script>
-                    navigator.clipboard.writeText("{preview_link}");
-                    </script>
-                    """, unsafe_allow_html=True)
-                    
+                preview_link = upload_to_github(session_id, view_url)
+                st.session_state["preview_link"] = preview_link
+                st.session_state["view_url"] = view_url
+                st.session_state["link_ready"] = True
             except Exception as e:
                 st.error("❌ 미리보기 링크 생성 실패")
                 st.text(str(e))
-
-            # 새 창에서 열 수 있는 안전한 링크 제공
+                st.session_state["link_ready"] = False
+        
+                    # 새 창에서 열 수 있는 안전한 링크 제공
+                    st.markdown(
+                        f'<a href="{view_url}" target="_blank">🔗 👉 새 창에서 명함 보기</a>',
+                        unsafe_allow_html=True
+                    )
+        # 👉 생성 완료 후 UI 출력
+        if st.session_state.get("link_ready", False):
+        
+            # 공유용 링크 입력창
+            st.text_input("🔗 공유용 링크", value=st.session_state["preview_link"], key="copy_link", label_visibility="collapsed")
+        
+            # 복사 버튼
+            if st.button("📋 공유용 링크 복사하기", key="copy_button"):
+                st.toast("✅ 클립보드에 복사되었습니다!", icon="📎")
+                st.markdown(f"""
+                    <script>
+                        navigator.clipboard.writeText("{st.session_state['preview_link']}");
+                    </script>
+                """, unsafe_allow_html=True)
+        
+            # 새 창에서 명함 보기
             st.markdown(
-                f'<a href="{view_url}" target="_blank">🔗 👉 새 창에서 명함 보기</a>',
+                f'<a href="{st.session_state["view_url"]}" target="_blank">🔗 👉 새 창에서 명함 보기</a>',
                 unsafe_allow_html=True
             )
 
