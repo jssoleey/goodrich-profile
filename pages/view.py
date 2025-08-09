@@ -471,7 +471,7 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
             components.html(gallery_html, height=530)
         
         # -------------------- LOCATION --------------------
-        map_embed_code = f"""
+        map_embed_code_1 = f"""
         <div style="display: flex; justify-content: center; margin-top: 20px;">
             <div style="width: 350px; padding: 15px 0 15px 0; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif;">        
                     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -501,7 +501,39 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
         </div>
         """
 
-        st.components.v1.html(map_embed_code, height=450)
+        st.components.v1.html(map_embed_code_1, height=450)
+        
+        map_embed_code_2 = f"""
+        <div style="display: flex; justify-content: center; margin-top: 20px;">
+            <div style="width: 350px; padding: 15px 0 15px 0; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: sans-serif;">        
+                    <link rel="preconnect" href="https://fonts.googleapis.com">
+                    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                    <link href="https://fonts.googleapis.com/css2?family=Galada&display=swap" rel="stylesheet">
+                    <div style="
+                        font-family: 'Galada', cursive;
+                        font-size: 20px;
+                        text-align: center;
+                        color: {theme_color};
+                        margin-top: 10px;
+                        margin-bottom: 25px;
+                    ">
+                        LOCATION
+                    </div>
+                <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3161.3754490458277!2d126.67243081174992!3d37.59332192247461!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357c81755bc22b71%3A0xa77f2b563324335b!2z7J247LKc6rSR7Jet7IucIOyEnOq1rCDsm5Dri7nrjIDroZwgNjY0!5e0!3m2!1sko!2skr!4v1754748227822!5m2!1sko!2skr" 
+                        width="280" 
+                        height="280" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+        </div>
+        """
+
+        st.components.v1.html(map_embed_code_2, height=450)
         
         # -------------------- QR code --------------------
         def generate_qr_code(url: str):
@@ -555,3 +587,4 @@ if user_folder and os.path.exists(os.path.join(user_folder, "profile.json")):
 
     else:
         st.error("⚠️ 배경 이미지가 존재하지 않습니다.")
+
